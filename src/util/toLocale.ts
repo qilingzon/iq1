@@ -1,19 +1,28 @@
-let lang = import.meta.env.WEBSITE_LANGUAGE;
+let lang: string | undefined = undefined;
 let currency = import.meta.env.CURRENCY;
 
-if(!lang && typeof document === 'undefined') {
+if (typeof document !== 'undefined' && document.documentElement && document.documentElement.lang) {
+    lang = document.documentElement.lang;
+} else {
+    // fall back to build-time env
+    // @ts-ignore
+    lang = import.meta && import.meta.env && import.meta.env.WEBSITE_LANGUAGE;
+}
+
+if (!lang && typeof document === 'undefined') {
     throw new Error("WEBSITE_LANGUAGE is not defined, please define it in .env file or rename the env.txt to .env");
 }
-if (!lang) lang = document.documentElement.lang;
 if (!currency)
     currency = document.documentElement.dataset.currency
         ? document.documentElement.dataset.currency
         : 'USD';
 
 let langCode = 'en-US';
-if (lang.length === 2) langCode = `${lang}-${lang.toUpperCase()}`;
-if (lang === 'en') langCode = 'en-US';
-if (lang.length === 5) langCode = lang;
+if (lang) {
+    if (lang.length === 2) langCode = `${lang}-${lang.toUpperCase()}`;
+    if (lang === 'en') langCode = 'en-US';
+    if (lang.length === 5) langCode = lang;
+}
 
 export function formatTime(time: string): string {
     let startDate = new Date();
