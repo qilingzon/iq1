@@ -18,10 +18,13 @@ if (!lang && typeof document === 'undefined') {
     lang = 'en';
 }
 
-if (!currency)
-    currency = document.documentElement.dataset.currency
-        ? document.documentElement.dataset.currency
-        : 'USD';
+if (!currency) {
+    if (typeof document !== 'undefined' && document.documentElement && document.documentElement.dataset && document.documentElement.dataset.currency) {
+        currency = document.documentElement.dataset.currency;
+    } else {
+        currency = 'USD';
+    }
+}
 
 let langCode = 'en-US';
 if (lang) {
