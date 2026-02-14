@@ -10,8 +10,14 @@ if (typeof document !== 'undefined' && document.documentElement && document.docu
 }
 
 if (!lang && typeof document === 'undefined') {
-    throw new Error("WEBSITE_LANGUAGE is not defined, please define it in .env file or rename the env.txt to .env");
+    // During SSR/build time `document` is undefined and env may not be loaded.
+    // Fall back to English instead of throwing so the dev server can start.
+    // If you prefer, create a `.env` file (or rename `env.txt`) with `WEBSITE_LANGUAGE=zh` or `en`.
+    // eslint-disable-next-line no-console
+    console.warn('WEBSITE_LANGUAGE not defined during SSR — falling back to "en"');
+    lang = 'en';
 }
+
 if (!currency)
     currency = document.documentElement.dataset.currency
         ? document.documentElement.dataset.currency
