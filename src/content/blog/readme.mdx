@@ -1,9 +1,9 @@
 ---
 tag:
   - Docs
-title: Getting started 🚀
-description: How to install and Nebulix.
-intro: Clone, Configure, Deploy
+title: 快速开始 🚀
+description: 如何安装与配置 Nebulix
+intro: 克隆、配置、部署
 style:
   template: split
   card_template: grid
@@ -14,16 +14,16 @@ pubDate: 2023-09-03T12:18:03.122+02:00
 thumbnail: /src/assets/nebulala_rocket.jpeg
 ---
 
-## Clone this repo or deploy to netlify
+## 克隆仓库或一键部署到 Netlify
 
-Easily deploy this theme to Netlify with a single click.
+可通过一键方式轻松将该主题部署到 Netlify。
 
 | [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/unfolding-io/nebulix#BLOG_SLUG=blog&PORTFOLIO_SLUG=work&SHOP_SLUG=shop&MENU_SLUG=menu&WEBSITE_LANGUAGE=en&CURRENCY=USD&UNITS=metric&NODE_VERSION=18) | [![GitHub Repo stars](https://img.shields.io/github/stars/unfolding-io/nebulix?logo=github)](https://github.com/unfolding-io/nebulix) |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 
-## 1. Setting up the .env file
+## 1. 配置 `.env` 文件
 
-rename the `env.txt` to `.env` and fill in your details
+将 `env.txt` 重命名为 `.env` 并填写你的配置信息
 
 ```ENV
 BLOG_SLUG=blog
@@ -53,9 +53,9 @@ SLACK_CHANNEL_ID=XXXXXXXXX
 SLACK_TOKEN=XXXXXXXXX
 ```
 
-### 2. Configure your Static CMS Backend
+### 2. 配置 Static CMS 后端
 
-Navigate to `src/pages/admin.astro` and provide your Git repository details. You can find a list of all supported Git backends at:
+前往 `src/pages/admin.astro` 并填写你的 Git 仓库信息。支持的后端列表请见：
 [https://www.staticcms.org/docs/backends-overview](https://www.staticcms.org/docs/backends-overview)
 
 **_Gitlab Example:_**
@@ -86,7 +86,7 @@ const config = {
 
 ```
 
-### 3. Add your site to the astro config
+### 3. 将站点信息添加至 `astro` 配置
 
 ```javascript
 
@@ -102,7 +102,7 @@ export default defineConfig({
 npm install
 ```
 
-### 🛠️ 5. Start Development server
+### 🛠️ 5. 启动开发服务器
 
 ```bash
 npm run dev
@@ -116,9 +116,9 @@ npm run cms-proxy-server
 
 Now you can open Static CMS on http://localhost:4321/admin/
 
-## ❌ Removing Collections
+## ❌ 删除集合
 
-If your cosmic journey excludes a blog, portfolio, shop, or restaurant menu, simply remove the corresponding documents from the `**src/content**`. Additionally, erase the page templates from `**src/pages**` .
+如果不需要 blog、portfolio、shop 或菜单，请从 `**src/content**` 中删除对应文档，并在 `**src/pages**` 中移除相应页面模板。
 
 ## 🛸 Commands
 
