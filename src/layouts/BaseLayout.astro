@@ -76,30 +76,31 @@ const contactForm = contact.data.form;
               <div set:html={marked.parse(contactForm.intro)} slot="content" />
             )
           }
-          <Picture
-            slot="image"
-            src={contactForm.thumbnail}
-            alt={`contact`}
-            sizes="50vw"
-            aspect={4 / 5}
-            format={["webp"]}
-            fit="cover"
-            layout="fill"
-            placeholder="blurred"
-            position="attention"
-            loading="lazy"
-            sizes="(max-width: 768px) 100vw, 40vw"
-            breakpoints={[420, 725, 960]}
-            artDirectives={[
-              {
-                media: "(max-width: 768px)",
-                ar: 21 / 9,
-                src: contactForm.thumbnail,
-                layout: "constrained",
-                breakpoints: [500, 601, 768, 820, 962, 1280, 1440, 1536, 1920],
-              },
-            ]}
-          />
+          <div slot="image">
+            <Picture
+              src={contactForm.thumbnail}
+              alt={`contact`}
+              sizes="50vw"
+              aspect={4 / 5}
+              format={["webp"]}
+              fit="cover"
+              layout="fill"
+              placeholder="blurred"
+              position="attention"
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, 40vw"
+              breakpoints={[420, 725, 960]}
+              artDirectives={[
+                {
+                  media: "(max-width: 768px)",
+                  ar: 21 / 9,
+                  src: contactForm.thumbnail,
+                  layout: "constrained",
+                  breakpoints: [500, 601, 768, 820, 962, 1280, 1440, 1536, 1920],
+                },
+              ]}
+            />
+          </div>
           <Icon name="close" class="w-6" />
         </ContactDialog>
       )
