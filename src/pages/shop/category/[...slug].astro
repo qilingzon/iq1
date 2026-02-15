@@ -5,7 +5,7 @@ import { getCollection } from "astro:content";
 import PageLayoutArchive from "@layouts/PageLayoutArchive.astro";
 import { getPagination, getCategoryData } from "@util/helpers";
 
-export async function getStaticPaths({ paginate }) {
+export async function getStaticPaths() {
   let posts = await getCollection("product");
 
   posts

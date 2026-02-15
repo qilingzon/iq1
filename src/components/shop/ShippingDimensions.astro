@@ -5,9 +5,9 @@ import convert from "convert";
 
 let units = import.meta.env.UNITS;
 if (!units) units = "metric";
-const convertUnit = (val, unit) => {
+const convertUnit = (val: any, unit: any) => {
   const obj = convert(val, unit).to("best", units);
-  return `${obj.quantity.toFixed(2)} ${obj.unit}`;
+  return `${Number(obj.quantity).toFixed(2)} ${obj.unit}`;
 };
 ---
 

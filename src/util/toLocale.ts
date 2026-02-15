@@ -11,11 +11,11 @@ if (typeof document !== 'undefined' && document.documentElement && document.docu
 
 if (!lang && typeof document === 'undefined') {
     // During SSR/build time `document` is undefined and env may not be loaded.
-    // Fall back to English instead of throwing so the dev server can start.
-    // If you prefer, create a `.env` file (or rename `env.txt`) with `WEBSITE_LANGUAGE=zh` or `en`.
+    // Fall back to Chinese instead of throwing so the dev server can start.
+    // If you prefer, create a `.env` file (or rename `env.txt`) with `WEBSITE_LANGUAGE=zh`.
     // eslint-disable-next-line no-console
-    console.warn('WEBSITE_LANGUAGE not defined during SSR — falling back to "en"');
-    lang = 'en';
+    console.warn('WEBSITE_LANGUAGE not defined during SSR — falling back to "zh"');
+    lang = 'zh';
 }
 
 if (!currency) {
@@ -26,10 +26,11 @@ if (!currency) {
     }
 }
 
-let langCode = 'en-US';
+let langCode = 'zh-CN';
 if (lang) {
     if (lang.length === 2) langCode = `${lang}-${lang.toUpperCase()}`;
     if (lang === 'en') langCode = 'en-US';
+    if (lang === 'zh') langCode = 'zh-CN';
     if (lang.length === 5) langCode = lang;
 }
 

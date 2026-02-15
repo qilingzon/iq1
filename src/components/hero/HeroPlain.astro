@@ -15,7 +15,6 @@ const {
   filter,
   filter_type,
 } = Astro.props;
-const { slug } = Astro.params;
 ---
 
 <div
@@ -61,7 +60,7 @@ const { slug } = Astro.params;
         {
           hero_buttons && (
             <div class="flex flex-wrap justify-center gap-4 py-8">
-              {hero_buttons.map((btn) => (
+              {hero_buttons.map((btn: any) => (
                 <Button {...btn} />
               ))}
             </div>

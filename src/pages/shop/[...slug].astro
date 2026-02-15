@@ -80,7 +80,7 @@ const product = {
   guid: post.data.guid,
   slug: post.slug,
 };
-let variation_images;
+let variation_images: any[] | undefined;
 const variations = post.data.variations
   ? post.data.variations
       .map((option) => {

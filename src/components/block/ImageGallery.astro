@@ -5,12 +5,12 @@ import { t } from "@util/translate";
 import Intersecting from "@components/common/Intersecting.vue";
 import { getImageUrl, getImageTransitionName } from "@util/helpers";
 const { title, images, container, aspect, animate } = Astro.props;
-const getAnimation = (image) => {
+const getAnimation = (image: any) => {
   return animate
     ? getImageTransitionName(image.image)
     : `image_${Math.random()}`;
 };
-const gallery = images.map((image) => getImageUrl(image.image));
+const gallery = images.map((image: any) => getImageUrl(image.image));
 
 let sizes = "calc(50vw - 2.5rem)";
 
@@ -33,7 +33,7 @@ if (container === "sm")
     <h2 class="title-sm fade-in">{title}</h2>
     <div class={`image-grid-${container}`}>
       {
-        images.map((image, index) => (
+        images.map((image: any, index: number) => (
           <a
             aria-label={t("enlarge_image")}
             transition:name={getAnimation(image)}

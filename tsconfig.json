@@ -3,6 +3,8 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "verbatimModuleSyntax": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
 
     "baseUrl": ".",
     "paths": {

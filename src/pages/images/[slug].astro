@@ -17,8 +17,8 @@ export async function getStaticPaths() {
   const images = await Astro.glob("../../assets/*");
   /* get all the images */
   let params = images
-    .filter((img) => ["jpeg", "jpg", "png", "gif"].includes(img.default.format))
-    .flatMap((img) => {
+    .filter((img: any) => ["jpeg", "jpg", "png", "gif"].includes(img.default.format))
+    .flatMap((img: any) => {
       const imgParts = img.default.src
         .split("/assets/")
         .pop()

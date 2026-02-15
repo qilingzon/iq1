@@ -5,14 +5,14 @@ import VariationButton from "./VariationButton.vue";
 import VariationInput from "./VariationInput.vue";
 
 const { thumbnail, variations } = Astro.props;
-const optionsArr = variations.map((option, index) => {
+const optionsArr = variations.map((option: any, index: number) => {
   if (option?.options) {
     return {
       name: option.name,
       id: option.id,
       show_images: option.show_images,
       key: `data-item-custom${index + 1}-value`,
-      options: option.options.map((opt) => {
+      options: option.options.map((opt: any) => {
         const file = opt.thumbnail ? opt.thumbnail : thumbnail;
         return {
           ...opt,
@@ -34,12 +34,12 @@ const optionsArr = variations.map((option, index) => {
 
 <div class="grid gap-4 py-10">
   {
-    optionsArr.map((option) => (
+    optionsArr.map((option: any) => (
       <div class="grid gap-2">
         <div class="title-xs font-bold">{option.name}</div>
         {option.options && option.options.length > 0 && (
           <div class=" flex flex-wrap justify-stretch gap-4">
-            {option.options.map((opt, idx) => (
+            {option.options.map((opt: any) => (
               <VariationButton
                 value={opt.value}
                 option={option.key}

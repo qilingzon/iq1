@@ -11,7 +11,7 @@ import { t } from "@util/translate";
 const { menu, title, social } = Astro.props;
 const currentPath = Astro.url.pathname.split("/")[1];
 
-const isActive = (href) => {
+const isActive = (href: string) => {
   if (currentPath === "" && href == "/") return true;
   if (currentPath !== "" && href.startsWith(`/${currentPath}`)) return true;
 };
@@ -28,7 +28,7 @@ const isActive = (href) => {
     {
       menu && (
         <ul class="nav-underline nav-links relative hidden flex-nowrap pl-4 uppercase tracking-wide before:absolute before:inset-y-4 before:left-0 before:border-l-2 before:border-primary before:border-opacity-50 md:flex ">
-          {menu.map((link) => (
+          {menu.map((link: any) => (
             <li class={`${isActive(link.href) ? "active font-semibold" : ""}`}>
               <a href={link.href} class={`block py-3`}>
                 {link.label}
@@ -57,7 +57,7 @@ const isActive = (href) => {
           </li>
 
           {social &&
-            social.slice(0, 3).map((link) => (
+            social.slice(0, 3).map((link: any) => (
               <li class="hidden md:block">
                 <a
                   href={link.href}
@@ -90,7 +90,7 @@ const isActive = (href) => {
                 class="mobile-links nav-links mt-3 w-full text-center"
                 slot="links"
               >
-                {menu.map((link, index) => (
+                {menu.map((link: any, index: number) => (
                   <li
                     style={`--animation-delay: ${(index + 1) * 100}ms`}
                     class={`title-md inner w-full border-2 border-transparent transition-all duration-1000 hover:border-current  ${
@@ -110,7 +110,7 @@ const isActive = (href) => {
                 class="relatives flex w-full flex-wrap justify-center gap-2 py-4"
                 slot="social"
               >
-                {social.map((link, index) => (
+                {social.map((link: any, index: number) => (
                   <li
                     class="inner"
                     style={`--animation-delay: ${(index + 1) * 100}ms`}

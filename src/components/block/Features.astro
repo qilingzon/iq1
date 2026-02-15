@@ -15,7 +15,7 @@ const { content, container, features } = Astro.props;
     {
       features && (
         <ul class="features my-10 flex flex-wrap justify-center gap-4 ">
-          {features.map((feature, index) => (
+          {features.map((feature: any, index: number) => (
             <li
               class={`features__item fade-up flex flex-1 flex-col items-center rounded-md text-center`}
               style={`--animation-delay: ${(index + 1) * 150}ms`}

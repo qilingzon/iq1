@@ -32,7 +32,7 @@ function getDefaultLang(): string {
         return import_meta.env.WEBSITE_LANGUAGE;
     }
     // @ts-ignore
-    return (import.meta && import.meta.env && import.meta.env.WEBSITE_LANGUAGE) || 'en';
+    return (import.meta && import.meta.env && import.meta.env.WEBSITE_LANGUAGE) || 'zh';
 }
 
 export function setLanguage(l: string) {

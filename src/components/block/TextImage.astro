@@ -146,7 +146,7 @@ const animation = `image_${animate ? imageName : Math.random()}`;
                   : "py-8"
               }`}
             >
-              {buttons.map((btn) => (
+              {buttons.map((btn: any) => (
                 <Button {...btn} />
               ))}
             </div>

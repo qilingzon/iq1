@@ -7,8 +7,8 @@ import Label from "@components/menu/Label.astro";
 import { slugify } from "@util/helpers";
 import { t } from "@util/translate";
 
-const getImageName = (url) => {
-  return url.split("/").pop().split(".")[0];
+const getImageName = (url: string) => {
+  return (url.split("/").pop() ?? "").split(".")[0];
 };
 
 const { categories } = Astro.props;
@@ -16,7 +16,7 @@ const { categories } = Astro.props;
 
 <div class="grid gap-20 pb-20">
   {
-    categories.map((cat) => (
+    categories.map((cat: any) => (
       <div class="grid gap-20">
         <Intersecting
           client:visible
@@ -31,7 +31,7 @@ const { categories } = Astro.props;
         </Intersecting>
 
         <ul class="auto-grid-lg menu-grid my-8 gap-10">
-          {cat.menu_items.map((item) => (
+          {cat.menu_items.map((item: any) => (
             <li>
               <Intersecting client:visible className="flex h-full">
                 <div class="fade-up flex h-full scroll-m-0 flex-col ">
@@ -66,7 +66,7 @@ const { categories } = Astro.props;
                       <span class="ml-auto" />
 
                       {item.details.labels &&
-                        item.details.labels.map((name) => (
+                        item.details.labels.map((name: string) => (
                           <Label name={name} />
                         ))}
                     </h3>
@@ -83,12 +83,12 @@ const { categories } = Astro.props;
                     <div class="mt-auto flex w-full justify-between  gap-4 pt-4">
                       <div class="flex flex-wrap content-end justify-start">
                         {item.details.allergens &&
-                          item.details.allergens.map((name) => (
+                          item.details.allergens.map((name: string) => (
                             <Label name={name} />
                           ))}
                       </div>
                       <div class="align-end flex flex-col justify-end">
-                        {item.price.map((price, index) => (
+                        {item.price.map((price: any, index: number) => (
                           <div class="ml-auto flex items-center justify-between gap-4">
                             {price.label && (
                               <span class="text-xs"> {price.label}</span>

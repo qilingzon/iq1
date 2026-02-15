@@ -1,7 +1,9 @@
 ---
 import { t } from "@util/translate";
 import { Icon } from "astro-icon/components";
-import PageFinder from "./PageFind.vue";
+import * as PageFinderModule from "./PageFind.vue";
+
+const PageFinder = (PageFinderModule as { default: any }).default;
 ---
 
 <PageFinder
@@ -11,9 +13,7 @@ import PageFinder from "./PageFind.vue";
     close: t("close"),
     clear: t("clear"),
   }}
-  client:visible
 >
-  '
-  <Icon name="search" class="h-6 w-6" slot="btn-search" />'
+  <Icon name="search" class="h-6 w-6" slot="btn-search" />
   <Icon name="close" class="h-10 w-10" slot="btn-close" />
 </PageFinder>

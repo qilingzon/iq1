@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 
 import { vIntersectionObserver } from "@vueuse/components";
@@ -22,12 +22,18 @@ function onIntersectionObserver([{ isIntersecting }]) {
   if (isIntersecting) firstVisible.value = true;
 }
 
-const props = defineProps({
-  className: String,
-  noSsr: Boolean,
-});
+const props = withDefaults(
+  defineProps<{
+    className?: string;
+    noSsr?: boolean;
+  }>(),
+  {
+    className: "",
+    noSsr: false,
+  },
+);
 const show = computed(() => {
-  if (!!props?.noSsr && !firstVisible.value) return false;
+  if (props.noSsr && !firstVisible.value) return false;
   return true;
 });
 </script>

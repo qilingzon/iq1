@@ -17,14 +17,14 @@ let posts = (await getCollection("product")).sort(
 
 if (products && products.length > 0) {
   posts = products
-    .map((productId) =>
+    .map((productId: string) =>
       posts.filter((product) => product.data.id === productId).pop(),
     )
-    .filter((val) => !!val);
+    .filter((val: any) => !!val);
 } else if (categories) {
   posts = posts.filter((post) =>
     categories.some(
-      (cat) => post.data.category && post.data.category.includes(cat.trim()),
+      (cat: string) => post.data.category && post.data.category.includes(cat.trim()),
     ),
   );
 }

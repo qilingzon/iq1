@@ -99,10 +99,10 @@ if (max) {
 }
 
 if (variations && variations.length > 0) {
-  variations.map((option, index) => {
+  variations.map((option: any, index: number) => {
     let vals: string[] = [];
     if (option?.options) {
-      option.options.forEach((opt) => {
+      option.options.forEach((opt: any) => {
         vals = [...vals, `${opt.label}${opt.price ? `[+${opt.price}]` : ""}`];
       });
     }

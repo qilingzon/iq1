@@ -47,7 +47,7 @@ const productWrapClass = () => {
         />
       )}
       <ul class={`bloglist grid gap-4 pb-14`} data-pagefind-ignore="all">
-        {page.data.map((post) => (
+        {page.data.map((post: any) => (
           <li>
             <Intersecting client:visible>
               <ItemCardSmall content={post} {base_url} animate={true} />
@@ -91,7 +91,7 @@ const productWrapClass = () => {
 
       <section data-pagefind-ignore="all">
         <ul class={`${productWrapClass()}`}>
-          {page.data.map((post) => (
+          {page.data.map((post: any) => (
             <li>
               <Intersecting client:visible>
                 {style.card_template === "grid" && (

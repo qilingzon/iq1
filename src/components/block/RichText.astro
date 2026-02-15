@@ -16,7 +16,7 @@ const renderedContent = marked.parse(content);
           class="fade-up inline-flex flex-wrap gap-4 py-8"
           style="--animation-delay: 0.6s"
         >
-          {buttons.map((btn) => (
+          {buttons.map((btn: any) => (
             <Button {...btn} />
           ))}
         </div>
