@@ -3,7 +3,7 @@ tag:
   - Docs
   - Features
 title: 使用块构建页面
-description: 解锁 Nebulix 的核心功能：嵌入、可定制块与独特视图切换。探索文本、图库、最新项目、商店分类、商品、功能与富文本块。
+description: 解锁 Nebulix 的核心功能：嵌入、可定制块与独特视图切换。探索文本、图库、最新项目、功能与富文本块。
 intro: 了解 Nebulix 的多样化内容块、MDX 集成与吸引人的视图切换
 blocks:
   - type: text_image
@@ -204,46 +204,6 @@ blocks:
       - Docs
     title: Recent Items (grid)
     content: "\n\n\n"
-  - type: shop_categories
-    component: ShopCategories
-    container: md
-    template: list
-    animate: false
-    title: Shop Catagories
-    content: >
-      Our Shop Categories Block offers the flexibility to display all or
-      specific categories of products. Choose from a variety of templates,
-      including list, grid, or flex, to customize the appearance of your
-      category listings.
-  - type: shop_categories
-    component: ShopCategories
-    container: md
-    template: grid
-    animate: true
-    title: Shop Categories (grid)
-  - type: shop_products
-    component: ShopProducts
-    count: 4
-    container: md
-    template: list
-    animate: false
-    categories:
-      - "Merch"
-    title: Shop Products
-    content: >
-      Enhance your online store with the Shop Products Block, which allows you
-      to feature selected products or an entire category. Tailor the appearance
-      of your product listings by choosing from versatile templates such as
-      list, flex, or grid.
-  - type: shop_products
-    component: ShopProducts
-    count: 6
-    container: md
-    template: flex
-    animate: true
-    categories:
-      - "Merch"
-    title: Shop Products (flex)
   - type: features
     component: Features
     container: md
@@ -307,7 +267,5 @@ This theme harnesses the power of the View Transitions API. Please note that tra
 - [Text-Image](#text-image)
 - [gallery](#gallery-block)
 - [Recent Items](#recent-items)
-- [Shop Catagories](#shop-catagories)
-- [Shop Products](#shop-products)
 - [Features](#features)
 - Rich Text

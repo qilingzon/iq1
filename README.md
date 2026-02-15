@@ -5,7 +5,7 @@
 
 
 
-A Universe of Possibilities: Blogs, Portfolios, Webshop, Restaurant Menus, and Beyond.
+A Universe of Possibilities: Blogs, Portfolios, Restaurant Menus, and Beyond.
 
 
 
@@ -20,7 +20,7 @@ Easily deploy this theme to Netlify with a single click, and conveniently update
 
 
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/unfolding-io/nebulix#BLOG_SLUG=blog&PORTFOLIO_SLUG=work&SHOP_SLUG=shop&MENU_SLUG=menu&WEBSITE_LANGUAGE=en&CURRENCY=USD&UNITS=metric&NODE_VERSION=18)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/unfolding-io/nebulix#BLOG_SLUG=blog&PORTFOLIO_SLUG=work&MENU_SLUG=menu&WEBSITE_LANGUAGE=en&CURRENCY=USD&UNITS=metric&NODE_VERSION=18)
 
 
 ## Constellations of Features:
@@ -28,7 +28,6 @@ Easily deploy this theme to Netlify with a single click, and conveniently update
 -   📰 Chart Your Path with a Blog
 -   🖼 Showcase Your Stellar Portfolio
 -   🍝 Illuminate Culinary Voyages with a Restaurant Menu
--   🛒 Launch Your Webshop Powered by Snipcart
 -   🔍 SEO Constellations: Canonical URLs and OpenGraph radiance
 -   🧭 Navigational Maps: Sitemap Support
 -   📑Language of the Stars: Markdown & MDX Support
@@ -48,12 +47,10 @@ rename the `env.txt` to `.env` and fill in your details
 ```ENV
 BLOG_SLUG=blog
 PORTFOLIO_SLUG=work
-SHOP_SLUG=shop
 MENU_SLUG=menu
 WEBSITE_LANGUAGE=en
 CURRENCY=USD
 UNITS=metric
-SNIPCART_KEY=<your-snipcart-public-key>
 NODE_VERSION=18
 NEWSLETTER_PROVIDER=mailchimp
 MAILCHIMP_API_KEY=XXXXXXXXXXXXXXXX-us21
@@ -140,7 +137,7 @@ Now you can open Static CMS on http://localhost:4321/admin/
 
 
 ## ❌ Removing Collections
-If your cosmic journey excludes a blog, portfolio, shop, or restaurant menu, simply remove the corresponding documents from the `src/content`. Additionally, erase the page templates from `src/pages` .
+If your cosmic journey excludes a blog, portfolio, or restaurant menu, simply remove the corresponding documents from the `src/content`. Additionally, erase the page templates from `src/pages`.
 
 
 ## 🛸 Commands
@@ -174,7 +171,7 @@ Check out [Astro documentation](https://docs.astro.build) or jump into Astro's [
 
 ## 📚 Tech Stack
 
-Astro, MDX, Vue, TailwindCSS, Pagefind, Snipcart
+Astro, MDX, Vue, TailwindCSS, Pagefind
 
 ## 🛟 Support
 
@@ -187,7 +184,7 @@ For those seeking priority assistance, we offer premium support services. Do you
 
 ## 📝 License
 
-Want to get rid of the attribution? Simply [purchase a license](https://nebulix.unfolding.io/shop/nebulix-license/) and you're good to go.
+Want to get rid of the attribution? Reach out via [hello@unfolding.io](mailto:hello@unfolding.io).
 
 ## 🚕 Roadmap
 
@@ -202,16 +199,6 @@ By [caffeinating](https://www.buymeacoffee.com/unfolding.io) your developer, you
 
 
 ## 📸 Screenshots
-
-![Nebulix](https://nebulix.unfolding.io/screenshots/nebulix-01-shop.jpg)
-
-![Nebulix](https://nebulix.unfolding.io/screenshots/nebulix-02-shop-category.jpg)
-
-![Nebulix](https://nebulix.unfolding.io/screenshots/nebulix-03-shop-product.jpg)
-
-![Nebulix](https://nebulix.unfolding.io/screenshots/nebulix-04-shop-product.jpg)
-
-![Nebulix](https://nebulix.unfolding.io/screenshots/nebulix-05-shop-product-dark.jpg)
 
 ![Nebulix](https://nebulix.unfolding.io/screenshots/nebulix-06-blogpost.jpg)
 
