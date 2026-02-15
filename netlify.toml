@@ -2,6 +2,9 @@
   publish = "dist"
   edge_functions = "edge-functions"
 
+[build.environment]
+  NODE_VERSION = "18"
+
 [[edge_functions]]
   function = "subscribe-mailchimp"
   path = "/api/subscribe-mailchimp"
