@@ -36,7 +36,7 @@
                     @click="showPopper = !showPopper"
                     class="select surface-overlay w-full text-left"
                   >
-                    {{ !!topic ? topic : "Select" }}
+                    {{ !!topic ? topic : t("select") }}
                   </button>
 
                   <template #content>
@@ -121,7 +121,7 @@
                 ></textarea>
                 <label
                   class="peer-placeholder-shown:left-4 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-9 peer-focus:scale-75 peer-focus:text-primary"
-                  >Message *</label
+                  >{{ t("message") }} *</label
                 >
               </div>
               <div
