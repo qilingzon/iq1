@@ -8,7 +8,7 @@ import Intersecting from "@components/common/Intersecting.vue";
 import { slugify, getGridImageSizes } from "@util/helpers";
 
 const base_url = import.meta.env.SHOP_SLUG;
-const { title, name, container, template, content, categories } = Astro.props;
+const { title, container, template, content, categories } = Astro.props;
 const { data } = await getEntry("config", "shop");
 
 const posts = (await getCollection("product")).sort(
@@ -27,10 +27,10 @@ let blockCategories: any[];
 
 if (categories && categories.length > 0) {
   blockCategories = categories
-    .map((cat) =>
+    .map((cat: string) =>
       productCategories.filter((category) => category.name === cat).pop(),
     )
-    .filter((val) => !!val);
+    .filter((val: unknown) => !!val);
 } else {
   blockCategories = productCategories.filter((category) =>
     allCategoriesFlat.includes(category.name),

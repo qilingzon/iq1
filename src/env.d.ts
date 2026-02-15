@@ -2,6 +2,7 @@
 /// <reference types="astro/client" />
 /// <reference types="astro-imagetools" />
 declare module "astro-imagetools/components"
+declare module "astro-imagetools/api"
 
 declare module "*.vue" {
 	import type { DefineComponent } from "vue";
