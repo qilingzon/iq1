@@ -104,6 +104,12 @@ backend: {
 
 If your site is on Netlify, you can switch to `git-gateway` and enable Identity + Git Gateway.
 
+#### Tencent EO + GitHub OAuth
+
+If you deploy on Tencent EO, follow this guide:
+
+- [Tencent EO GitHub CMS Auth Guide](docs/tencent-eo-github-cms-auth.md)
+
 On Netlify, enable these services before visiting `/admin`:
 
 1. `Site settings -> Identity -> Enable Identity`

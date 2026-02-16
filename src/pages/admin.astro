@@ -15,7 +15,7 @@ const cmsBackend = import.meta.env.CMS_BACKEND || "github";
 const cmsBranch = import.meta.env.CMS_GITHUB_BRANCH || "main";
 const cmsRepo = import.meta.env.CMS_GITHUB_REPO || "qilingzon/iq1";
 const cmsBaseUrl = import.meta.env.CMS_BASE_URL;
-const cmsAuthEndpoint = import.meta.env.CMS_AUTH_ENDPOINT;
+const cmsAuthEndpoint = import.meta.env.CMS_AUTH_ENDPOINT || "/auth";
 
 const backend =
   cmsBackend === "git-gateway"
@@ -28,7 +28,7 @@ const backend =
         repo: cmsRepo,
         branch: cmsBranch,
         ...(cmsBaseUrl ? { base_url: cmsBaseUrl } : {}),
-        ...(cmsAuthEndpoint ? { auth_endpoint: cmsAuthEndpoint } : {}),
+        ...(cmsBaseUrl ? { auth_endpoint: cmsAuthEndpoint } : {}),
       };
 
 const config = {
