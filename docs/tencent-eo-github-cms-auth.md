@@ -4,6 +4,18 @@
 
 ## 1) 在 GitHub 创建 OAuth App
 
+可先执行一键参数生成命令：
+
+```bash
+npm run cms:auth:setup
+```
+
+命令会生成文件：
+
+- `docs/cms-auth.generated.txt`
+
+里面包含 GitHub OAuth 回调地址、SCF 环境变量、EO 环境变量，可直接复制粘贴。
+
 进入 GitHub Developer Settings -> OAuth Apps -> New OAuth App：
 
 - Application name: `iq1-cms-auth`
