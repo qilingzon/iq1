@@ -76,16 +76,33 @@ SLACK_TOKEN=XXXXXXXXX
 Navigate to `src/pages/admin.astro` and provide your Git repository details. You can find a list of all supported Git backends at:
 <https://www.staticcms.org/docs/backends-overview>
 
-#### Recommended (Netlify + Git Gateway)
+#### Recommended (Tencent EO / Generic Hosting)
 
-`src/pages/admin.astro` is configured for Netlify Git Gateway by default:
+`src/pages/admin.astro` uses GitHub backend by default (EO-friendly):
 
 ```javascript
 backend: {
-	name: "git-gateway",
+	name: "github",
+	repo: "owner/repo",
 	branch: "main",
 }
 ```
+
+If you use custom OAuth service, also set:
+
+```javascript
+backend: {
+	name: "github",
+	repo: "owner/repo",
+	branch: "main",
+	base_url: "https://your-auth-service.example.com",
+	auth_endpoint: "/auth",
+}
+```
+
+#### Netlify option (optional)
+
+If your site is on Netlify, you can switch to `git-gateway` and enable Identity + Git Gateway.
 
 On Netlify, enable these services before visiting `/admin`:
 
@@ -93,7 +110,7 @@ On Netlify, enable these services before visiting `/admin`:
 2. `Identity -> Services -> Enable Git Gateway`
 3. Invite your admin user and complete activation
 
-After that, open `https://your-domain.com/admin` and sign in.
+After configuration, open `https://your-domain.com/admin` and sign in.
 
 #### Local editing mode
 

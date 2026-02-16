@@ -56,16 +56,33 @@ SLACK_TOKEN=XXXXXXXXX
 前往 `src/pages/admin.astro` 并填写你的 Git 仓库信息。支持的后端列表请见：
 [https://www.staticcms.org/docs/backends-overview](https://www.staticcms.org/docs/backends-overview)
 
-#### 推荐方案（Netlify + Git Gateway）
+#### 推荐方案（腾讯云 EO / 通用静态托管）
 
-本项目默认已配置为 Netlify Git Gateway：
+本项目默认已配置为 GitHub 后端（适合 EO）：
 
 ```javascript
 backend: {
-	name: "git-gateway",
+	name: "github",
+	repo: "owner/repo",
 	branch: "main",
 }
 ```
+
+如使用自建 OAuth 服务，还可以配置：
+
+```javascript
+backend: {
+	name: "github",
+	repo: "owner/repo",
+	branch: "main",
+	base_url: "https://your-auth-service.example.com",
+	auth_endpoint: "/auth",
+}
+```
+
+#### Netlify 方案（可选）
+
+如果你部署在 Netlify，可切换为 `git-gateway` 并开启 Identity + Git Gateway。
 
 请在 Netlify 后台先开启以下服务：
 
@@ -73,7 +90,7 @@ backend: {
 2. `Identity -> Services -> Enable Git Gateway`
 3. 邀请并激活后台管理员账号
 
-完成后访问 `https://你的域名/admin` 登录即可看到已有内容。
+配置完成后访问 `https://你的域名/admin` 登录即可看到已有内容。
 
 #### 本地编辑模式
 
