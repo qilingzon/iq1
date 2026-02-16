@@ -7,7 +7,6 @@ import pageIcon from "@icons/page.svg";
 import menuIcon from "@icons/menu.svg";
 import settingsIcon from "@icons/settings.svg";
 import portfolioIcon from "@icons/portfolio.svg";
-const staticCmsVersion = "3.4.5";
 
 const lang = import.meta.env.WEBSITE_LANGUAGE;
 const url = Astro.site;
@@ -54,14 +53,7 @@ const config = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nebulix Admin | by unfolding.io</title>
-    <link
-      rel="stylesheet"
-      href={`https://unpkg.com/@staticcms/app@^${staticCmsVersion}/dist/main.css`}
-    />
-    <script
-      is:inline
-      type="text/javascript"
-      src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <link rel="stylesheet" href="/vendor/staticcms/main.css" />
 
     <style is:global>
       #cms-root,
@@ -106,10 +98,7 @@ const config = {
     </style>
   </head>
   <body>
-    <script
-      is:inline
-      src={`https://unpkg.com/@staticcms/app@^${staticCmsVersion}/dist/static-cms-app.js`}
-    ></script>
+    <script is:inline src="/vendor/staticcms/static-cms-app.js"></script>
     <script
       is:inline
       define:vars={{
