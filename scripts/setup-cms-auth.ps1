@@ -3,7 +3,11 @@ Param(
   [string]$AuthBaseUrl = "",
   [string]$Repo = "qilingzon/iq1",
   [string]$Branch = "main",
-  [string]$Region = "ap-guangzhou"
+  [string]$Region = "ap-guangzhou",
+  [string]$FunctionName = "iq1-cms-github-oauth",
+  [string]$GithubClientId = "",
+  [string]$GithubClientSecret = "",
+  [switch]$SkipSecretStore
 )
 
 Set-StrictMode -Version Latest
@@ -16,6 +20,17 @@ function Normalize-Url([string]$value) {
 
 function New-RandomSecret() {
   return ([guid]::NewGuid().ToString("N") + [guid]::NewGuid().ToString("N"))
+}
+
+function Convert-SecureToPlain([SecureString]$secure) {
+  if (-not $secure) { return "" }
+  $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+  try {
+    return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
+  }
+  finally {
+    [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+  }
 }
 
 $SiteUrl = Normalize-Url $SiteUrl
@@ -37,8 +52,19 @@ $stateSecret = New-RandomSecret
 $callbackUrl = "{0}/callback" -f $AuthBaseUrl
 $healthUrl = "{0}/health" -f $AuthBaseUrl
 
+if ([string]::IsNullOrWhiteSpace($GithubClientId)) {
+  $GithubClientId = (Read-Host "Enter GitHub Client ID (optional, press Enter to skip)").Trim()
+}
+
+if ([string]::IsNullOrWhiteSpace($GithubClientSecret)) {
+  $secureInput = Read-Host "Enter GitHub Client Secret (optional, hidden input; press Enter to skip)" -AsSecureString
+  $GithubClientSecret = Convert-SecureToPlain $secureInput
+}
+
 $outputDir = Join-Path $PSScriptRoot "..\docs"
 $outputFile = Join-Path $outputDir "cms-auth.generated.txt"
+$secretStoreDir = Join-Path $PSScriptRoot "..\.secrets"
+$secretStoreFile = Join-Path $secretStoreDir "cms-auth.local.json"
 
 $report = @"
 ================= Static CMS GitHub Auth Parameters =================
@@ -62,6 +88,7 @@ CMS_GITHUB_BRANCH=$Branch
 
 [Tencent Cloud Suggested Settings]
 Region=$Region
+FunctionName=$FunctionName
 FunctionEntry=index.main_handler
 FunctionRuntime=Nodejs18.15
 
@@ -78,12 +105,51 @@ if (-not (Test-Path $outputDir)) {
 
 $report | Set-Content -Path $outputFile -Encoding UTF8
 
+if (-not $SkipSecretStore) {
+  if (-not (Test-Path $secretStoreDir)) {
+    New-Item -Path $secretStoreDir -ItemType Directory | Out-Null
+  }
+
+  $encryptedGithubSecret = ""
+  if (-not [string]::IsNullOrWhiteSpace($GithubClientSecret)) {
+    $encryptedGithubSecret = (ConvertTo-SecureString $GithubClientSecret -AsPlainText -Force) | ConvertFrom-SecureString
+  }
+
+  $store = @{
+    siteUrl = $SiteUrl
+    authBaseUrl = $AuthBaseUrl
+    repo = $Repo
+    branch = $Branch
+    region = $Region
+    functionName = $FunctionName
+    oauthStateSecret = $stateSecret
+    allowedOrigins = $SiteUrl
+    githubClientId = $GithubClientId
+    githubClientSecretEncrypted = $encryptedGithubSecret
+    createdAt = (Get-Date).ToString("s")
+  }
+
+  ($store | ConvertTo-Json -Depth 6) | Set-Content -Path $secretStoreFile -Encoding UTF8
+}
+
 Write-Host ""
 Write-Host "Generated deployment parameters:" -ForegroundColor Green
 Write-Host "   $outputFile" -ForegroundColor Cyan
 Write-Host ""
+if (-not $SkipSecretStore) {
+  Write-Host "Local secret store:" -ForegroundColor Green
+  Write-Host "   $secretStoreFile" -ForegroundColor Cyan
+  Write-Host ""
+}
 Write-Host "Next steps:" -ForegroundColor Yellow
 Write-Host "1) Create GitHub OAuth App using the generated values"
-Write-Host "2) Copy [SCF Environment Variables] into Tencent SCF"
-Write-Host "3) Copy [Website Environment Variables] into EO"
+if (-not $SkipSecretStore) {
+  Write-Host "2) Run cms:auth:deploy (it will auto-load local secrets)"
+  Write-Host "3) Run cms:auth:bind to auto-bind API routes"
+  Write-Host "4) Copy [Website Environment Variables] into EO"
+}
+else {
+  Write-Host "2) Copy [SCF Environment Variables] into Tencent SCF"
+  Write-Host "3) Copy [Website Environment Variables] into EO"
+}
 Write-Host ""

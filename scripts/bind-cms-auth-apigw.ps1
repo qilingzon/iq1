@@ -1,14 +1,13 @@
 Param(
-  [Parameter(Mandatory = $true)]
-  [string]$FunctionName,
+  [string]$FunctionName = "",
 
-  [Parameter(Mandatory = $true)]
-  [string]$Region,
+  [string]$Region = "",
 
   [string]$Namespace = "default",
   [string]$ServiceName = "iq1-cms-auth",
   [string]$Environment = "release",
-  [int]$ServiceTimeout = 30
+  [int]$ServiceTimeout = 30,
+  [string]$SecretsFile = ".secrets/cms-auth.local.json"
 )
 
 Set-StrictMode -Version Latest
@@ -22,6 +21,15 @@ function Require-Tccli {
   if ($cmd) { return $cmd.Source }
 
   throw "tccli not found. Please install tccli first."
+}
+
+function Assert-TccliScfReady([string]$Tccli) {
+  $output = & $Tccli scf --help 2>&1
+  $text = ($output -join "`n")
+  $isBaseOnly = $text -match "usage:\s*tccli\s*\[-h\]\s*\[--profile PROFILE\]"
+  if ($LASTEXITCODE -ne 0 -or $isBaseOnly) {
+    throw "tccli is installed but SCF/APIGW commands are unavailable. Install full plugins, e.g.: pip install tccli tencentcloud-cli-plugin-scf tencentcloud-cli-plugin-apigateway"
+  }
 }
 
 function Invoke-Tccli {
@@ -41,6 +49,19 @@ function Invoke-Tccli {
   }
 
   return @{ ok = $true; text = ($output -join "`n") }
+}
+
+function Resolve-SecretsPath([string]$rawPath, [string]$projectRoot) {
+  if ([string]::IsNullOrWhiteSpace($rawPath)) { return "" }
+  if ([IO.Path]::IsPathRooted($rawPath)) { return $rawPath }
+  return Join-Path $projectRoot $rawPath
+}
+
+function Read-LocalSecretStore([string]$path) {
+  if (-not (Test-Path $path)) { return $null }
+  $text = Get-Content -Path $path -Raw -Encoding UTF8
+  if ([string]::IsNullOrWhiteSpace($text)) { return $null }
+  return ($text | ConvertFrom-Json)
 }
 
 function New-TriggerDesc {
@@ -85,6 +106,32 @@ function New-TriggerDesc {
 }
 
 $tccli = Require-Tccli
+Assert-TccliScfReady -Tccli $tccli
+$projectRoot = Split-Path -Parent $PSScriptRoot
+$secretPath = Resolve-SecretsPath -rawPath $SecretsFile -projectRoot $projectRoot
+$secretStore = Read-LocalSecretStore -path $secretPath
+
+if ($secretStore) {
+  if ([string]::IsNullOrWhiteSpace($FunctionName) -and $secretStore.functionName) {
+    $FunctionName = [string]$secretStore.functionName
+  }
+  if ([string]::IsNullOrWhiteSpace($Region) -and $secretStore.region) {
+    $Region = [string]$secretStore.region
+  }
+}
+
+if ([string]::IsNullOrWhiteSpace($FunctionName)) {
+  $FunctionName = (Read-Host "Enter SCF Function Name").Trim()
+}
+
+if ([string]::IsNullOrWhiteSpace($Region)) {
+  $Region = (Read-Host "Enter SCF Region (e.g. ap-guangzhou)").Trim()
+}
+
+if ([string]::IsNullOrWhiteSpace($FunctionName) -or [string]::IsNullOrWhiteSpace($Region)) {
+  throw "FunctionName and Region are required."
+}
+
 $paths = @("/auth", "/callback", "/health")
 
 Write-Host "Binding API Gateway triggers to function $FunctionName ..." -ForegroundColor Yellow

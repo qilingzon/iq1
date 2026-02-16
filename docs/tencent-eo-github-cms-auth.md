@@ -13,8 +13,10 @@ npm run cms:auth:setup
 命令会生成文件：
 
 - `docs/cms-auth.generated.txt`
+- `.secrets/cms-auth.local.json`（本地密钥存储，不会提交到 git）
 
 里面包含 GitHub OAuth 回调地址、SCF 环境变量、EO 环境变量，可直接复制粘贴。
+并且会保存你后续部署要用的本地参数（包括自动生成的 `OAUTH_STATE_SECRET`）。
 
 进入 GitHub Developer Settings -> OAuth Apps -> New OAuth App：
 
@@ -38,17 +40,21 @@ npm run cms:auth:setup
 
 先确保本机已安装并配置 `tccli`（已完成 `tccli configure`）。
 
+如果你本机只有基础版 `tccli.exe`（没有 `scf` 子命令），先安装插件：
+
+```bash
+pip install tccli tencentcloud-cli-plugin-scf tencentcloud-cli-plugin-apigateway
+```
+
 然后执行：
 
 ```bash
 npm run cms:auth:deploy -- \
    -FunctionName iq1-cms-github-oauth \
-   -Region ap-guangzhou \
-   -GithubClientId YOUR_CLIENT_ID \
-   -GithubClientSecret YOUR_CLIENT_SECRET \
-   -PublicBaseUrl https://auth.example.com \
-   -AllowedOrigins https://your-site.com
+   -Region ap-guangzhou
 ```
+
+> 如果你已运行过 `npm run cms:auth:setup` 并填写过参数，`cms:auth:deploy` 会优先自动读取 `.secrets/cms-auth.local.json`，可不再重复输入 GitHub Client ID/Secret、PublicBaseUrl、AllowedOrigins、OAUTH_STATE_SECRET。
 
 该命令会自动：
 - 打包 `oauth/tencent-scf/github-oauth-broker.mjs`
@@ -63,9 +69,7 @@ npm run cms:auth:deploy -- \
 也可以直接执行自动绑定命令：
 
 ```bash
-npm run cms:auth:bind -- \
-   -FunctionName iq1-cms-github-oauth \
-   -Region ap-guangzhou
+npm run cms:auth:bind
 ```
 
 该命令会尝试自动创建/更新上述 3 个路由触发器。
