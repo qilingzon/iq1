@@ -20,6 +20,8 @@ pnpm-debug.log*
 docs/cms-auth.generated.txt
 .vscode/
 .netlify/
+.wrangler/
+oauth/cloudflare-worker/.wrangler/
 
 # macOS-specific files
 .DS_Store
