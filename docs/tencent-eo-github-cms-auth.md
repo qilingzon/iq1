@@ -29,7 +29,42 @@ npm run cms:auth:setup
 - `Client ID`
 - `Client Secret`
 
-## 2) 部署腾讯云 SCF 函数
+## 2) 部署认证服务（EdgeOne 边缘函数，推荐）
+
+当你的账号无法新建 API 网关资源时（提示 `apigw:CreateService` 无权限或产品限制），请直接使用 EO 边缘函数方案。
+
+代码文件：
+
+- `edge-functions/cms-github-oauth/cms-github-oauth.js`
+
+### 2.1 在 EdgeOne 创建边缘函数
+
+在 EO 控制台中：
+
+1. 创建边缘函数，代码粘贴 `edge-functions/cms-github-oauth/cms-github-oauth.js`
+2. 配置环境变量：
+   - `GITHUB_CLIENT_ID=你的ClientID`
+   - `GITHUB_CLIENT_SECRET=你的ClientSecret`
+   - `PUBLIC_BASE_URL=https://你的认证服务域名`
+   - `OAUTH_STATE_SECRET=随机长字符串`
+   - `ALLOWED_ORIGINS=https://你的站点域名`
+3. 绑定路由：
+   - `GET /auth`
+   - `GET /callback`
+   - `GET /health`
+
+### 2.2 绑定认证域名
+
+将边缘函数发布到 `auth.iqii.cn`（或你的认证域名）。
+
+发布后先验证：
+
+- 访问 `https://你的认证服务域名/health`
+- 返回 `{"ok":true,...}` 即正常。
+
+## 3) （可选）部署腾讯云 SCF 函数
+
+如果你的账号可正常创建 API 网关资源，也可以继续用 SCF 方案。
 
 代码文件：
 
@@ -84,7 +119,7 @@ npm run cms:auth:bind
 
 把 `github-oauth-broker.mjs` 重命名为 `index.mjs` 后上传。
 
-## 3) 配置 SCF 环境变量
+## 4) 配置 SCF 环境变量
 
 在函数环境变量中添加：
 
@@ -99,7 +134,7 @@ npm run cms:auth:bind
 - `PUBLIC_BASE_URL` 必须与你给函数绑定的公网域名一致。
 - `ALLOWED_ORIGINS` 可配置多个，逗号分隔。
 
-## 4) 绑定 API 网关路由
+## 5) 绑定 API 网关路由
 
 为函数添加 API 网关触发器，保证至少以下路径可访问：
 
@@ -112,7 +147,7 @@ npm run cms:auth:bind
 - 访问 `https://你的认证服务域名/health`
 - 返回 `{"ok":true,...}` 即正常。
 
-## 5) 配置站点后台使用认证服务
+## 6) 配置站点后台使用认证服务
 
 在网站部署环境（EO）中设置：
 
@@ -121,7 +156,7 @@ npm run cms:auth:bind
 
 然后重新部署网站。
 
-## 6) 登录验证
+## 7) 登录验证
 
 访问：
 
