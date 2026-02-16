@@ -22,6 +22,7 @@
     "preview": "astro preview",
     "cms:auth:setup": "powershell -ExecutionPolicy Bypass -File scripts/setup-cms-auth.ps1",
     "cms:auth:deploy": "powershell -ExecutionPolicy Bypass -File scripts/deploy-cms-auth-scf.ps1",
+    "cms:auth:bind": "powershell -ExecutionPolicy Bypass -File scripts/bind-cms-auth-apigw.ps1",
     "astro": "astro",
     "cms-proxy-server": "npx --yes @staticcms/proxy-server",
     "dev:demo": "cross-env BLOG_SLUG=blog PORTFOLIO_SLUG=work SHOP_SLUG=shop MENU_SLUG=menu WEBSITE_LANGUAGE=zh CURRENCY=USD UNITS=metric NODE_VERSION=18 SNIPCART_KEY=ZDVjZmQwYmUtMzNlYy00OGEyLTkxMTItMTg4YTI5NGQxN2I3NjM4MjgzOTQyMzA2MTM1NjI1 astro dev"

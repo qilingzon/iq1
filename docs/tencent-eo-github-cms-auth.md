@@ -60,6 +60,16 @@ npm run cms:auth:deploy -- \
 - `/callback`
 - `/health`
 
+也可以直接执行自动绑定命令：
+
+```bash
+npm run cms:auth:bind -- \
+   -FunctionName iq1-cms-github-oauth \
+   -Region ap-guangzhou
+```
+
+该命令会尝试自动创建/更新上述 3 个路由触发器。
+
 > 如果你不传 `-OauthStateSecret`，脚本会自动生成一个随机值。
 
 ### 2.2 腾讯云函数部署建议（手动方式）
