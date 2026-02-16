@@ -33,6 +33,37 @@ npm run cms:auth:setup
 
 - `oauth/tencent-scf/github-oauth-broker.mjs`
 
+
+### 2.1 半自动部署（推荐）
+
+先确保本机已安装并配置 `tccli`（已完成 `tccli configure`）。
+
+然后执行：
+
+```bash
+npm run cms:auth:deploy -- \
+   -FunctionName iq1-cms-github-oauth \
+   -Region ap-guangzhou \
+   -GithubClientId YOUR_CLIENT_ID \
+   -GithubClientSecret YOUR_CLIENT_SECRET \
+   -PublicBaseUrl https://auth.example.com \
+   -AllowedOrigins https://your-site.com
+```
+
+该命令会自动：
+- 打包 `oauth/tencent-scf/github-oauth-broker.mjs`
+- 创建或更新 SCF 函数
+- 写入所需环境变量
+
+命令执行完成后，只需要在 API 网关绑定 3 个 GET 路由到该函数：
+- `/auth`
+- `/callback`
+- `/health`
+
+> 如果你不传 `-OauthStateSecret`，脚本会自动生成一个随机值。
+
+### 2.2 腾讯云函数部署建议（手动方式）
+
 在腾讯云函数（SCF）中新建 Node.js 18+ 函数，入口设置为：
 
 - `index.main_handler`
