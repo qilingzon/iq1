@@ -78,7 +78,7 @@ Navigate to `src/pages/admin.astro` and provide your Git repository details. You
 
 #### Recommended (Tencent EO / Generic Hosting)
 
-`src/pages/admin.astro` uses GitHub backend by default (EO-friendly):
+`src/pages/admin.astro` uses GitHub backend by default (EO-friendly), so no `CMS_*` environment variables are required for standard usage:
 
 ```javascript
 backend: {
