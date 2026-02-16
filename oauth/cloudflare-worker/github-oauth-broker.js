@@ -72,12 +72,66 @@ function isAllowedOrigin(origin, allowList) {
   return allowList.includes(origin);
 }
 
+function parseOriginCandidate(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    return `${url.protocol}//${url.host}`;
+  } catch {
+    return "";
+  }
+}
+
+function buildAuthStartPage({ provider, authUrl, origin }) {
+  const safeProvider = (provider || "github").replace(/[^a-z0-9_-]/gi, "");
+  const handshake = `authorizing:${safeProvider}`;
+  const targetOrigin = JSON.stringify(origin || "*");
+  const redirectTo = JSON.stringify(authUrl);
+
+  return `<!doctype html>
+<html>
+  <head><meta charset="utf-8" /><title>CMS Auth Start</title></head>
+  <body>
+    <script>
+      (function () {
+        var handshake = ${JSON.stringify(handshake)};
+        var targetOrigin = ${targetOrigin};
+        var redirectTo = ${redirectTo};
+        var redirected = false;
+
+        function go() {
+          if (redirected) return;
+          redirected = true;
+          window.location.href = redirectTo;
+        }
+
+        function onMessage(event) {
+          if (event && event.data === handshake) {
+            window.removeEventListener("message", onMessage, false);
+            go();
+          }
+        }
+
+        window.addEventListener("message", onMessage, false);
+
+        if (window.opener) {
+          try { window.opener.postMessage(handshake, targetOrigin); } catch (_) {}
+          try { window.opener.postMessage(handshake, "*"); } catch (_) {}
+        }
+
+        setTimeout(go, 1200);
+      })();
+    </script>
+    <p>Starting authentication…</p>
+  </body>
+</html>`;
+}
+
 function buildResultPage({ ok, origin, payload, message }) {
   const targetOrigin = JSON.stringify(origin || "*");
-  const status = ok ? "success" : "error";
   const body = ok
-    ? `authorization:github:${status}:${JSON.stringify(payload)}`
-    : `authorization:github:${status}:${message}`;
+    ? `authorization:github:success:${JSON.stringify(payload)}`
+    : `authorization:github:error:${JSON.stringify({ error: message })}`;
 
   return `<!doctype html>
 <html>
@@ -184,23 +238,36 @@ export default {
     }
 
     if (path.endsWith("/auth")) {
-      const origin = normalizeOrigin(url.searchParams.get("origin") || url.searchParams.get("site_url") || "");
+      const provider = (url.searchParams.get("provider") || "github").toLowerCase();
+      if (provider !== "github") {
+        return json(400, { error: "Unsupported provider" });
+      }
+
+      const explicitOrigin = url.searchParams.get("origin") || url.searchParams.get("site_url") || "";
+      const inferredOrigin =
+        parseOriginCandidate(request.headers.get("origin") || "") ||
+        parseOriginCandidate(request.headers.get("referer") || "") ||
+        "";
+      const normalized = normalizeOrigin(explicitOrigin || inferredOrigin);
+      const origin = normalized === "*" ? "" : normalized;
+
       if (origin !== "*" && !isAllowedOrigin(origin, allowList)) {
         return json(400, { error: "Origin not allowed" });
       }
 
       const state = await createState(origin, stateSecret);
       const redirectUri = `${baseUrl}/callback`;
+      const scope = url.searchParams.get("scope") || "repo";
       const authUrl =
         `https://github.com/login/oauth/authorize?` +
         new URLSearchParams({
           client_id: env.GITHUB_CLIENT_ID,
           redirect_uri: redirectUri,
-          scope: "repo,user",
+          scope,
           state,
         }).toString();
 
-      return redirect(authUrl);
+      return html(200, buildAuthStartPage({ provider, authUrl, origin }));
     }
 
     if (path.endsWith("/callback")) {
