@@ -5,5 +5,5 @@ workers_dev = true
 
 [vars]
 GITHUB_CLIENT_ID = "Ov23li9DtAAf3ktApuTu"
-PUBLIC_BASE_URL = "https://auth.iqii.cn"
+PUBLIC_BASE_URL = "https://iq1-cms-oauth.qizo.workers.dev"
 ALLOWED_ORIGINS = "https://iqii.cn"

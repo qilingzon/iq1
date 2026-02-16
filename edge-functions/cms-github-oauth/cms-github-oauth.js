@@ -131,7 +131,12 @@ function buildResultPage({ ok, origin, payload, message }) {
         var targetOrigin = ${targetOrigin};
         var message = ${JSON.stringify(body)};
         if (window.opener) {
-          window.opener.postMessage(message, targetOrigin);
+          try {
+            window.opener.postMessage(message, targetOrigin);
+          } catch (_) {}
+          try {
+            window.opener.postMessage(message, "*");
+          } catch (_) {}
         }
         window.close();
       })();
@@ -234,7 +239,7 @@ export default async (request) => {
     try {
       const redirectUri = `${BASE_URL}/callback`;
       const token = await exchangeCodeForToken(code, redirectUri);
-      return html(200, buildResultPage({ ok: true, origin, payload: { token, provider: "github" } }));
+      return html(200, buildResultPage({ ok: true, origin, payload: { token } }));
     } catch (err) {
       return html(
         500,
