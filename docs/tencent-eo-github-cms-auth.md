@@ -52,12 +52,28 @@ npm run cms:auth:setup
    - `PUBLIC_BASE_URL=https://你的认证服务域名`
    - `OAUTH_STATE_SECRET=随机长字符串`
    - `ALLOWED_ORIGINS=https://你的站点域名`
+   - `STATE_STORAGE=kv`（可选，启用后用于记录 state/session）
 3. 绑定路由：
    - `GET /auth`
    - `GET /callback`
    - `GET /health`
 
-### 2.2 绑定认证域名
+### 2.2（推荐）启用 EO KV 保存 state
+
+建议在 EO 开通 KV 命名空间，用于保存 OAuth state（短期有效）与登录会话元信息。
+
+- 目的：降低回调重放风险、便于审计和调试。
+- 过期建议：`state` 10 分钟，登录会话 1~24 小时。
+
+实践建议：
+
+- state key：`oauth:state:<nonce>`
+- value：`{"origin":"https://iqii.cn","ts":1700000000000}`
+- callback 时读取并立即删除该 key（一次性消费）
+
+> 不启用 KV 也可运行（当前代码使用签名 state），但线上推荐启用 KV。
+
+### 2.3 绑定认证域名
 
 将边缘函数发布到 `auth.iqii.cn`（或你的认证域名）。
 
