@@ -24,9 +24,10 @@ function Require-Tccli {
 }
 
 function Assert-TccliScfReady([string]$Tccli) {
-  $output = & $Tccli scf --help 2>&1
+  $output = & $Tccli scf GetFunction help 2>&1
   $text = ($output -join "`n")
-  $isBaseOnly = $text -match "usage:\s*tccli\s*\[-h\]\s*\[--profile PROFILE\]"
+  $isScfReady = $text -match "AVAILABLE PARAMETERS" -and $text -match "GetFunction"
+  $isBaseOnly = $text -match "usage:\s*tccli\s*\[-h\]\s*\[--profile PROFILE\]" -and -not $isScfReady
   if ($LASTEXITCODE -ne 0 -or $isBaseOnly) {
     throw "tccli is installed but SCF/APIGW commands are unavailable. Install full plugins, e.g.: pip install tccli tencentcloud-cli-plugin-scf tencentcloud-cli-plugin-apigateway"
   }
@@ -35,11 +36,18 @@ function Assert-TccliScfReady([string]$Tccli) {
 function Invoke-Tccli {
   Param(
     [string]$Tccli,
-    [string[]]$Args,
+    [string[]]$CmdArgs,
     [switch]$AllowFail
   )
 
-  $output = & $Tccli @Args 2>&1
+  $previousEap = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    $output = & $Tccli @CmdArgs 2>&1
+  }
+  finally {
+    $ErrorActionPreference = $previousEap
+  }
   if ($LASTEXITCODE -ne 0 -and -not $AllowFail) {
     throw "tccli failed: $($output -join [Environment]::NewLine)"
   }
@@ -49,6 +57,36 @@ function Invoke-Tccli {
   }
 
   return @{ ok = $true; text = ($output -join "`n") }
+}
+
+function Invoke-TccliWithPayloadFile {
+  Param(
+    [string]$Tccli,
+    [string]$Action,
+    [string]$Region,
+    [hashtable]$Payload,
+    [switch]$AllowFail
+  )
+
+  $workDir = Join-Path $env:TEMP ("iq1-cms-auth-bind-" + [guid]::NewGuid().ToString("N"))
+  New-Item -Path $workDir -ItemType Directory | Out-Null
+
+  try {
+    $payloadPath = Join-Path $workDir "payload.json"
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::WriteAllText($payloadPath, ($Payload | ConvertTo-Json -Depth 12), $utf8NoBom)
+
+    return Invoke-Tccli -Tccli $Tccli -CmdArgs @(
+      "scf", $Action,
+      "--region", $Region,
+      "--cli-input-json", ("file://{0}" -f $payloadPath)
+    ) -AllowFail:$AllowFail
+  }
+  finally {
+    if (Test-Path $workDir) {
+      Remove-Item $workDir -Recurse -Force
+    }
+  }
 }
 
 function Resolve-SecretsPath([string]$rawPath, [string]$projectRoot) {
@@ -138,29 +176,20 @@ Write-Host "Binding API Gateway triggers to function $FunctionName ..." -Foregro
 
 foreach ($path in $paths) {
   $triggerDesc = New-TriggerDesc -Path $path -ServiceName $ServiceName -Environment $Environment -ServiceTimeout $ServiceTimeout
+  $payload = @{
+    Namespace = $Namespace
+    FunctionName = $FunctionName
+    TriggerName = "apigw"
+    Type = "apigw"
+    TriggerDesc = $triggerDesc
+  }
 
   Write-Host ("Ensuring route {0}" -f $path) -ForegroundColor Yellow
 
-  $updateResult = Invoke-Tccli -Tccli $tccli -Args @(
-    "scf", "UpdateTrigger",
-    "--Region", $Region,
-    "--Namespace", $Namespace,
-    "--FunctionName", $FunctionName,
-    "--TriggerName", "apigw",
-    "--Type", "apigw",
-    "--TriggerDesc", $triggerDesc
-  ) -AllowFail
+  $updateResult = Invoke-TccliWithPayloadFile -Tccli $tccli -Action "UpdateTrigger" -Region $Region -Payload $payload -AllowFail
 
   if (-not $updateResult.ok) {
-    $createResult = Invoke-Tccli -Tccli $tccli -Args @(
-      "scf", "CreateTrigger",
-      "--Region", $Region,
-      "--Namespace", $Namespace,
-      "--FunctionName", $FunctionName,
-      "--TriggerName", "apigw",
-      "--Type", "apigw",
-      "--TriggerDesc", $triggerDesc
-    ) -AllowFail
+    $createResult = Invoke-TccliWithPayloadFile -Tccli $tccli -Action "CreateTrigger" -Region $Region -Payload $payload -AllowFail
 
     if (-not $createResult.ok) {
       Write-Host ("Failed for {0}" -f $path) -ForegroundColor Red

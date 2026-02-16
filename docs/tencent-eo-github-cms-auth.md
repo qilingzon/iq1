@@ -2,6 +2,10 @@
 
 本指南用于给网站后台 `/admin` 增加 GitHub 登录能力，适用于腾讯云 EO 场景。
 
+若你的腾讯云账号无法新建 API 网关资源，可直接使用免费替代方案：
+
+- `docs/cloudflare-worker-github-cms-auth.md`
+
 ## 1) 在 GitHub 创建 OAuth App
 
 可先执行一键参数生成命令：

@@ -1,0 +1,9 @@
+name = "iq1-cms-oauth"
+main = "github-oauth-broker.js"
+compatibility_date = "2025-11-01"
+workers_dev = true
+
+[vars]
+GITHUB_CLIENT_ID = "Ov23li9DtAAf3ktApuTu"
+PUBLIC_BASE_URL = "https://auth.iqii.cn"
+ALLOWED_ORIGINS = "https://iqii.cn"
