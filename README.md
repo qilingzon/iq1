@@ -76,6 +76,36 @@ SLACK_TOKEN=XXXXXXXXX
 Navigate to `src/pages/admin.astro` and provide your Git repository details. You can find a list of all supported Git backends at:
 <https://www.staticcms.org/docs/backends-overview>
 
+#### Recommended (Netlify + Git Gateway)
+
+`src/pages/admin.astro` is configured for Netlify Git Gateway by default:
+
+```javascript
+backend: {
+	name: "git-gateway",
+	branch: "main",
+}
+```
+
+On Netlify, enable these services before visiting `/admin`:
+
+1. `Site settings -> Identity -> Enable Identity`
+2. `Identity -> Services -> Enable Git Gateway`
+3. Invite your admin user and complete activation
+
+After that, open `https://your-domain.com/admin` and sign in.
+
+#### Local editing mode
+
+Run these commands in two terminals:
+
+```bash
+npm run dev
+npm run cms-proxy-server
+```
+
+Then open `http://localhost:4321/admin`.
+
 
 **_Gitlab Example:_**
 
