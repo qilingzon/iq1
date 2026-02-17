@@ -149,10 +149,18 @@ function buildAuthStartPage({ provider, authUrl, origin }) {
         var targetOrigin = ${targetOrigin};
         var redirectTo = ${redirectTo};
         var redirected = false;
+        var intervalId = null;
+
+        function pingHandshake() {
+          if (!window.opener || redirected) return;
+          try { window.opener.postMessage(handshake, targetOrigin); } catch (_) {}
+          try { window.opener.postMessage(handshake, "*"); } catch (_) {}
+        }
 
         function go() {
           if (redirected) return;
           redirected = true;
+          if (intervalId) clearInterval(intervalId);
           window.location.href = redirectTo;
         }
 
@@ -164,13 +172,9 @@ function buildAuthStartPage({ provider, authUrl, origin }) {
         }
 
         window.addEventListener("message", onMessage, false);
-
-        if (window.opener) {
-          try { window.opener.postMessage(handshake, targetOrigin); } catch (_) {}
-          try { window.opener.postMessage(handshake, "*"); } catch (_) {}
-        }
-
-        setTimeout(go, 1200);
+        pingHandshake();
+        intervalId = setInterval(pingHandshake, 250);
+        setTimeout(go, 4000);
       })();
     </script>
     <p>Starting authentication…</p>
