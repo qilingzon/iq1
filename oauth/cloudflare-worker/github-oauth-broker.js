@@ -201,7 +201,10 @@ function buildResultPage({ ok, origin, payload, message }) {
           }
           if (tries >= 8) {
             if (intervalId) clearInterval(intervalId);
-            window.close();
+            fallbackRedirect();
+            setTimeout(function () {
+              try { window.close(); } catch (_) {}
+            }, 800);
           }
         }
         sendResult();
