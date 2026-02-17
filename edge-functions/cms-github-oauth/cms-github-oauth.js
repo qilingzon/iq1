@@ -192,6 +192,8 @@ function buildAuthStartPage({ provider, authUrl, origin }) {
 
 function buildResultPage({ ok, origin, payload, message }) {
   const targetOrigin = JSON.stringify(origin || "*");
+  const fallbackOrigin = origin && origin !== "*" ? origin.replace(/\/$/, "") : "";
+  const fallbackAdminUrl = fallbackOrigin ? `${fallbackOrigin}/admin` : "";
   const body = ok
     ? `authorization:github:success:${JSON.stringify(payload)}`
     : `authorization:github:error:${JSON.stringify({ error: message })}`;
@@ -204,9 +206,34 @@ function buildResultPage({ ok, origin, payload, message }) {
       (function () {
         var targetOrigin = ${targetOrigin};
         var message = ${JSON.stringify(body)};
+        var ok = ${ok ? "true" : "false"};
+        var token = ${JSON.stringify(payload?.token || "")};
+        var errorText = ${JSON.stringify(message || "Authentication failed")};
+        var fallbackAdminUrl = ${JSON.stringify(fallbackAdminUrl)};
         var tries = 0;
+        var intervalId = null;
+
+        function fallbackRedirect() {
+          if (!fallbackAdminUrl) return;
+          if (ok && token) {
+            window.location.href =
+              fallbackAdminUrl +
+              "#access_token=" +
+              encodeURIComponent(token) +
+              "&token_type=bearer";
+            return;
+          }
+          window.location.href =
+            fallbackAdminUrl + "#error=" + encodeURIComponent(errorText || "Authentication failed");
+        }
+
         function sendResult() {
           tries += 1;
+          if (!window.opener) {
+            if (intervalId) clearInterval(intervalId);
+            fallbackRedirect();
+            return;
+          }
           if (window.opener) {
             try {
               window.opener.postMessage(message, targetOrigin);
@@ -216,11 +243,12 @@ function buildResultPage({ ok, origin, payload, message }) {
             } catch (_) {}
           }
           if (tries >= 8) {
+            if (intervalId) clearInterval(intervalId);
             window.close();
           }
         }
         sendResult();
-        setInterval(sendResult, 150);
+        intervalId = setInterval(sendResult, 150);
       })();
     </script>
     <p>${ok ? "Authentication successful. You can close this window." : "Authentication failed."}</p>
