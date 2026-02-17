@@ -153,15 +153,23 @@ function buildResultPage({ ok, origin, payload, message }) {
       (function () {
         var targetOrigin = ${targetOrigin};
         var message = ${JSON.stringify(body)};
-        if (window.opener) {
-          try {
-            window.opener.postMessage(message, targetOrigin);
-          } catch (_) {}
-          try {
-            window.opener.postMessage(message, "*");
-          } catch (_) {}
+        var tries = 0;
+        function sendResult() {
+          tries += 1;
+          if (window.opener) {
+            try {
+              window.opener.postMessage(message, targetOrigin);
+            } catch (_) {}
+            try {
+              window.opener.postMessage(message, "*");
+            } catch (_) {}
+          }
+          if (tries >= 8) {
+            window.close();
+          }
         }
-        window.close();
+        sendResult();
+        setInterval(sendResult, 150);
       })();
     </script>
     <p>${ok ? "Authentication successful. You can close this window." : "Authentication failed."}</p>
