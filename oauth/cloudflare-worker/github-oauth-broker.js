@@ -251,16 +251,16 @@ export default {
         return json(400, { error: "Unsupported provider" });
       }
 
+      const inferredOrigin =
+        parseOriginCandidate(request.headers.get("origin") || "") ||
+        parseOriginCandidate(request.headers.get("referer") || "") ||
+        "";
       const explicitOrigin =
         url.searchParams.get("origin") ||
         url.searchParams.get("site_url") ||
         parseOriginCandidate(url.searchParams.get("site_id") || "") ||
         "";
-      const inferredOrigin =
-        parseOriginCandidate(request.headers.get("origin") || "") ||
-        parseOriginCandidate(request.headers.get("referer") || "") ||
-        "";
-      const normalized = normalizeOrigin(explicitOrigin || inferredOrigin);
+      const normalized = normalizeOrigin(inferredOrigin || explicitOrigin);
       const origin = normalized === "*" ? "" : normalized;
 
       if (origin && !isAllowedOrigin(origin, allowList)) {
