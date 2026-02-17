@@ -642,4 +642,4 @@ const config = defineCollection({
 	})
 })
 
-export const collections = { blog, page, menu, project, config }
+export const collections = { blog, page, menu, project, product, config }
