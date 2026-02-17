@@ -95,10 +95,17 @@ function buildAuthStartPage({ provider, authUrl, origin }) {
   const handshake = `authorizing:${safeProvider}`;
   const targetOrigin = JSON.stringify(origin || "*");
   const redirectTo = JSON.stringify(authUrl);
+  const redirectHref = authUrl
+    .replace(/&/g, "&amp;")
+    .replace(/\"/g, "&quot;");
 
   return `<!doctype html>
 <html>
-  <head><meta charset="utf-8" /><title>CMS Auth Start</title></head>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="8;url=${redirectHref}" />
+    <title>CMS Auth Start</title>
+  </head>
   <body>
     <script>
       (function () {
@@ -135,6 +142,7 @@ function buildAuthStartPage({ provider, authUrl, origin }) {
       })();
     </script>
     <p>Starting authentication…</p>
+    <p><a href="${redirectHref}">Continue to GitHub</a></p>
   </body>
 </html>`;
 }
