@@ -78,6 +78,9 @@ function parseOriginCandidate(value) {
     const url = new URL(value);
     return `${url.protocol}//${url.host}`;
   } catch {
+    if (/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(value)) {
+      return `https://${value.toLowerCase()}`;
+    }
     return "";
   }
 }
@@ -243,7 +246,11 @@ export default {
         return json(400, { error: "Unsupported provider" });
       }
 
-      const explicitOrigin = url.searchParams.get("origin") || url.searchParams.get("site_url") || "";
+      const explicitOrigin =
+        url.searchParams.get("origin") ||
+        url.searchParams.get("site_url") ||
+        parseOriginCandidate(url.searchParams.get("site_id") || "") ||
+        "";
       const inferredOrigin =
         parseOriginCandidate(request.headers.get("origin") || "") ||
         parseOriginCandidate(request.headers.get("referer") || "") ||
@@ -251,7 +258,7 @@ export default {
       const normalized = normalizeOrigin(explicitOrigin || inferredOrigin);
       const origin = normalized === "*" ? "" : normalized;
 
-      if (origin !== "*" && !isAllowedOrigin(origin, allowList)) {
+      if (origin && !isAllowedOrigin(origin, allowList)) {
         return json(400, { error: "Origin not allowed" });
       }
 
