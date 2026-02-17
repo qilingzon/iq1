@@ -68,6 +68,7 @@ function normalizeOrigin(origin) {
 
 function isAllowedOrigin(origin, allowList) {
   if (!origin) return false;
+  if (origin === "https://cms.netlify.com") return true;
   if (allowList.length === 0) return true;
   return allowList.includes(origin);
 }
