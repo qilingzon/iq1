@@ -126,6 +126,12 @@ function parseOriginCandidate(value) {
     const url = new URL(value);
     return `${url.protocol}//${url.host}`;
   } catch {
+    if (/^(localhost|127\.0\.0\.1|\[::1\])$/i.test(value)) {
+      return `http://${value.toLowerCase()}:4321`;
+    }
+    if (/^(localhost|127\.0\.0\.1|\[::1\]):\d+$/i.test(value)) {
+      return `http://${value.toLowerCase()}`;
+    }
     if (/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(value)) {
       return `https://${value.toLowerCase()}`;
     }
