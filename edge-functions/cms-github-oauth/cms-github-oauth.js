@@ -112,6 +112,9 @@ function normalizeOrigin(origin) {
 function isAllowedOrigin(origin) {
   if (!origin) return false;
   if (origin === "https://cms.netlify.com") return true;
+  if (/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/i.test(origin)) {
+    return true;
+  }
   if (ALLOW_LIST.length === 0) return true;
   return ALLOW_LIST.includes(origin);
 }
