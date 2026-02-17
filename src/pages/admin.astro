@@ -9,12 +9,12 @@ import settingsIcon from "@icons/settings.svg";
 import portfolioIcon from "@icons/portfolio.svg";
 
 const lang = import.meta.env.WEBSITE_LANGUAGE;
-const url = Astro.site;
 const cmsBackend = import.meta.env.CMS_BACKEND || "github";
 const cmsBranch = import.meta.env.CMS_GITHUB_BRANCH || "main";
 const cmsRepo = import.meta.env.CMS_GITHUB_REPO || "qilingzon/iq1";
 const cmsBaseUrl = import.meta.env.CMS_BASE_URL || "https://oauth.aniv.cn";
 const cmsAuthEndpoint = import.meta.env.CMS_AUTH_ENDPOINT || "/auth";
+const cmsSiteUrl = import.meta.env.CMS_SITE_URL || "https://iqii.cn";
 const cmsLocalBackend =
   import.meta.env.CMS_LOCAL_BACKEND === "true" || import.meta.env.DEV;
 
@@ -34,7 +34,7 @@ const backend =
 
 const config = {
   locale: lang,
-  site_url: url,
+  site_url: cmsSiteUrl,
   logo_url: "https://nebulix.unfolding.io/logo.svg",
   local_backend: cmsLocalBackend,
   backend,
