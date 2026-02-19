@@ -1,5 +1,5 @@
 # build output
-# dist/  # 如果要让 EO Pages 只做静态发布（不安装依赖/不构建），需要把 dist/ 提交到仓库
+dist/
 # generated types
 .astro/
 
