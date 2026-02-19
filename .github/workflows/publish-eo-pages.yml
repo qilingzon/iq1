@@ -38,4 +38,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: eo-pages
+          destination_dir: dist
           force_orphan: true
